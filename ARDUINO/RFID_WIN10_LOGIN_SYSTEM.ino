@@ -89,7 +89,7 @@ void message() {
    display.display();
    delay(1000);
 }
-String array_to_string(byte array[], unsigned int len, char buffer[]) {
+String arrayToString(byte array[], unsigned int len, char buffer[]) {
    for (unsigned int i = 0; i < len; i++) {
       byte nib1 = (array[i] >> 4) & 0x0F;
       byte nib2 = (array[i] >> 0) & 0x0F;
@@ -183,7 +183,7 @@ void loop() {
       display.display();
    }
    getID();
-   readid = array_to_string(readCard, 4, str);
+   readid = arrayToString(readCard, 4, str);
    setPassword();
    resetPassword();
    if (password != "" && password.length() > 8 && readid == card1 && isLogged == 0) {
