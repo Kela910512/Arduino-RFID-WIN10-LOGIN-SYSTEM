@@ -16,16 +16,15 @@ MFRC522 mfrc522(SS, 5);
 MFRC522::MIFARE_Key key;
 SoftwareSerial EEBlue(11, 10);
 Ultrasonic ultrasonic(8, 7, 68000UL);
-
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire, 13, 400000UL, 100000UL);
 
+const char card1[32] = "EB1CEFFC";
+const long passwordExpireInterval = 3600000;
 char str[32] = "";
-char card1[32] = "EB1CEFFC";
 String readid, password = "";
 byte readCard[4];
 byte distance, i, lastx, x = 0;
 byte isLogged = 1;
-long passwordExpireInterval = 3600000;
 unsigned long lastPasswordCheck, lastPotChange, start = 0;
 
 void setup() {
@@ -39,9 +38,9 @@ void setup() {
    digitalWrite(LED, HIGH);
    Serial.begin(57600);
    SPI.begin();
-   mfrc522.PCD_Init();
    Keyboard.begin();
    EEBlue.begin(9600);
+   mfrc522.PCD_Init();
 }
 void setPassword() {
    if (EEBlue.available() > 0) {
@@ -55,12 +54,11 @@ void resetPassword() {
    }
 }
 void loginCommand() {
+   delay(400);
    Keyboard.press(KEY_LEFT_CTRL);
    Keyboard.press('a');
    Keyboard.releaseAll();
    delay(400);
-   Keyboard.press(KEY_ESC);
-   Keyboard.release(KEY_ESC);
    Keyboard.print(password);
    Keyboard.releaseAll();
    delay(100);
@@ -142,6 +140,7 @@ void countDown() {
          display.display();
          i--;
          if (i == 0) {
+            delay(1000);
             winLock();
             distance = 0;
             start = 0;
@@ -186,7 +185,7 @@ void loop() {
    readid = arrayToString(readCard, 4, str);
    setPassword();
    resetPassword();
-   if (password != "" && password.length() > 8 && readid == card1 && isLogged == 0) {
+   if (password != "" && password.length() > 2 && readid == card1 && isLogged == 0) {
       loginCommand();
    } else if (readid == card1 && isLogged == 1) {
       winLock();
