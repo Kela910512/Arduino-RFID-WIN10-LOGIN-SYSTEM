@@ -24,7 +24,7 @@ char str[32] = "";
 String readid, password = "";
 byte readCard[4];
 byte distance, i, lastx, x = 0;
-byte isLogged = 1;
+byte isLogged = 0;
 unsigned long lastPasswordCheck, lastPotChange, start = 0;
 
 void setup() {
